@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PatientAlert {
+  id          String   @id @default(uuid())
+  patientId   String
+  type        String   // ALLERGY | MEDICAL_RISK | SPECIAL_CONDITION | ADMINISTRATIVE
+  severity    String   // low | medium | high
+  message     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([patientId])
+  @@unique([patientId, type, message, isActive])  // base para la regla anti-duplicados
+}
